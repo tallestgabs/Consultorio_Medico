@@ -26,19 +26,19 @@ typedef struct{
 } PacienteArgs;
 
 void * medico(void *arg){
-    int i = *((int *) arg);                                         // id
+    int i = *((int *) arg);     // id
     while(1){
         pthread_mutex_lock(&mutex);
-        while(quantidadePacientes == 0){                            // enquanto nao tem paciente, dorme
+        while(quantidadePacientes == 0){     // enquanto nao tem paciente, dorme
             pthread_cond_wait(&medico_cond, &mutex);
         }
         //acorda
         quantidadePacientes--;
 
-        pthread_cond_signal(&paciente_cond);                        // chama um dos pacientes
+        pthread_cond_signal(&paciente_cond);     // chama um dos pacientes
         printf("Medico %d: Proximo paciente!\n", i);
         pthread_mutex_unlock(&mutex);
-        sleep(5);                                                   // realiza a consulta
+        sleep(5);     // realiza a consulta
     }
 }
 
@@ -105,7 +105,7 @@ void * paciente(void *arg){
 void * recepcionista(void *arg){
     while(1){
         pthread_mutex_lock(&mutex);
-        while(pessoas == 0){                                        // se nao tiver pessoas, dorme
+        while(pessoas == 0){    // se nao tiver pessoas, dorme
             pthread_cond_wait(&recepcionista_cond, &mutex);
         }
         // pessoa acorda recepcionista
@@ -117,7 +117,7 @@ void * recepcionista(void *arg){
         int valor_assentos;
         sem_getvalue(&semaforo_assentos, &valor_assentos);
 
-        if(valor_assentos != 0){                                     // tem assentos
+        if(valor_assentos != 0){    // tem assentos
             lotado = 0;
             printf("Temos assentos disponiveis\n");
         }
@@ -126,7 +126,7 @@ void * recepcionista(void *arg){
             printf("Infelizmente estamos sem vagas nos assentos, porem se alguem sair voce pode tentar pegar.\n");
         }
 
-        pthread_cond_signal(&atendimento_cond);                     // avisa que o atendimento acabou
+        pthread_cond_signal(&atendimento_cond);   // avisa que o atendimento acabou
 
         pthread_mutex_unlock(&mutex);
         
